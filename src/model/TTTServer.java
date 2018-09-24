@@ -1,0 +1,52 @@
+package model;
+
+import model.abitur.netz.Server;
+
+public class TTTServer extends Server {
+
+    //Attribute
+    private boolean playersOneTurn = true;
+    private int maxPlayerAmount = 2;
+    private int currentPlayerAmount = 0;
+    private String[] playerIps = new String[2];
+
+
+    public TTTServer(int pPort) {
+        super(pPort);
+    }
+
+    @Override
+    public void processNewConnection(String pClientIP, int pClientPort) {
+        if(currentPlayerAmount < maxPlayerAmount) {
+            send(pClientIP, pClientPort, "WELCOME;Willkommen Bratan.");
+            playerIps[currentPlayerAmount] = pClientIP;
+            currentPlayerAmount++;
+        } else{
+            send(pClientIP, pClientPort, "TOOMUCH;Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
+        }
+    }
+
+    @Override
+    public void processMessage(String pClientIP, int pClientPort, String pMessage) {
+        String[] nachrichtenTeil = pMessage.split(":");
+        if(nachrichtenTeil[0].equals("CONNECT")){
+            processNewConnection(pClientIP, pClientPort);
+
+        } else if(nachrichtenTeil[0].equals("PICK")){
+            int x = Integer.parseInt(nachrichtenTeil[1]);
+            int y = Integer.parseInt(nachrichtenTeil[2]);
+
+        } else if(nachrichtenTeil[0].equals("LEAVE")){
+            processClosingConnection(pClientIP, pClientPort);
+
+        }else{
+            send(pClientIP, pClientPort, "FALSECOMMAND;Geben Sie bitte einen richtigen Befehl ein.");
+        }
+    }
+
+    @Override
+    public void processClosingConnection(String pClientIP, int pClientPort) {
+        send(pClientIP, pClientPort, "SIGNOUT;Hayde Ciao der Empfang geht weg.");
+        closeConnection(pClientIP, pClientPort);
+    }
+}
