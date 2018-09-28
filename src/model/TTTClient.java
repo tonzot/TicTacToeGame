@@ -1,17 +1,20 @@
 package model;
 
 import model.abitur.netz.Client;
+import model.framework.Map;
 
 public class TTTClient extends Client {
 
-    private int map[][] = new int[3][3];
+    private int tiles[][] = new int[3][3];
     private boolean myTurn;
+    private Map map;
 
 
     public TTTClient(String pServerIP, int pServerPort) {
         super(pServerIP, pServerPort);
         myTurn = false;
-
+        map = new Map();
+        //send("CONNECT");
     }
 
     @Override
@@ -36,7 +39,7 @@ public class TTTClient extends Client {
 
 
     public void createMap(){
-        map = new int[3][3];
+        tiles = new int[3][3];
     }
 
 

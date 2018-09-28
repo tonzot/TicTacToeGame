@@ -19,7 +19,7 @@ public class Config {
     // Frameworkversion
     public final static String VERSION = "AOS-KNB-Graphical-Java-Framework - 1.7 - 08.12.2017";
 
-    public final static  String ServerIp = "0";
-    public final static  int ServerPort = 0;
+    public final static  String ServerIp = "10.17.130.68";
+    public final static  int ServerPort = 187;
 
 }
