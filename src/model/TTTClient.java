@@ -1,5 +1,6 @@
 package model;
 
+import control.framework.UIController;
 import model.abitur.netz.Client;
 import model.framework.Map;
 
@@ -10,11 +11,13 @@ public class TTTClient extends Client {
     private Map map;
 
 
-    public TTTClient(String pServerIP, int pServerPort) {
+    public TTTClient(String pServerIP, int pServerPort, UIController uiController) {
         super(pServerIP, pServerPort);
+        System.out.println(1);
         myTurn = false;
         map = new Map();
-        //send("CONNECT");
+        uiController.drawObject(map);
+        send("CONNECT");
     }
 
     @Override
@@ -41,6 +44,8 @@ public class TTTClient extends Client {
     public void createMap(){
         tiles = new int[3][3];
     }
+
+
 
 
     /**
