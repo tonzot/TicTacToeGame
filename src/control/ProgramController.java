@@ -2,6 +2,7 @@ package control;
 
 import control.framework.UIController;
 import model.TTTClient;
+import model.TTTServer;
 
 /**
  * Ein Objekt der Klasse ProgramController dient dazu das Programm zu steuern. Die updateProgram - Methode wird
@@ -32,7 +33,7 @@ public class ProgramController {
     public void startProgram(){
 
         client = new TTTClient(Config.ServerIp,Config.ServerPort);
-
+        new TTTServer(Config.ServerPort);
     }
 
     /**
