@@ -32,7 +32,7 @@ public class ProgramController {
      */
     public void startProgram(){
 
-        client = new TTTClient(Config.ServerIp,Config.ServerPort);
+        client = new TTTClient(Config.ServerIp,Config.ServerPort,uiController);
         new TTTServer(Config.ServerPort);
     }
 
