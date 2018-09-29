@@ -46,5 +46,11 @@ public class TTTClient extends Client {
     public void sendPick(int x, int y){
         send("PICK;" + x + ";" + y);
         myTurn = false;
+        int i = map.checkOver();
+        if(i == 1){
+            send("WIN");
+        }else if(i == 2){
+            send("DRAW");
+        }
     }
 }
