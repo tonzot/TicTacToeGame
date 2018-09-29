@@ -2,7 +2,6 @@ package model;
 
 import control.framework.UIController;
 import model.abitur.netz.Client;
-import model.framework.Map;
 
 public class TTTClient extends Client {
 

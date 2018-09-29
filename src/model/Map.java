@@ -1,10 +1,11 @@
-package model.framework;
+package model;
 
+import model.framework.GraphicalObject;
 import view.framework.DrawTool;
 
 import java.awt.geom.Rectangle2D;
 
-public class Map extends GraphicalObject{
+public class Map extends GraphicalObject {
 
     private Rectangle2D.Double[][] boxes;
 
