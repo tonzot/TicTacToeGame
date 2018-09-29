@@ -5,50 +5,44 @@ import model.abitur.netz.Client;
 
 public class TTTClient extends Client {
 
-    private int tiles[][] = new int[3][3];
     private boolean myTurn;
     private Map map;
+    private int sign;
 
 
     public TTTClient(String pServerIP, int pServerPort, UIController uiController) {
         super(pServerIP, pServerPort);
-        System.out.println(1);
         myTurn = false;
-        map = new Map();
+        map = new Map(this);
         uiController.drawObject(map);
         send("CONNECT");
+        sign = 1;
     }
 
     @Override
     public void processMessage(String pMessage) {
+        String[] splits = pMessage.split(";");
 
-        if (pMessage.equals("START")){
-            createMap();
-        }
-//Keks
-        //------------------------------------------------
-
-
-            if (pMessage.equals("PICK")) {
-
-            }
-
-        //-------------------------------------
-        if (pMessage.equals("LEAVE")){
-
+        if(splits[0].equals("OPPONENTPICK")){
+            map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),2);
+            myTurn = true;
         }
     }
 
-
-    public void createMap(){
-        tiles = new int[3][3];
+    public boolean isMyTurn() {
+        return myTurn;
     }
 
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
 
+    public int getSign() {
+        return sign;
+    }
 
-
-    /**
-     * -MyTurn
-     * überprüfen ob Feld frei
-     **/
+    public void sendPick(int x, int y){
+        send("PICK;" + x + ";" + y);
+        myTurn = false;
+    }
 }
