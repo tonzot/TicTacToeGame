@@ -26,6 +26,8 @@ public class TTTClient extends Client {
         if(splits[0].equals("OPPONENTPICK")){
             map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),2);
             myTurn = true;
+        }else if(splits[0].equals("START")){
+            myTurn = true;
         }
     }
 
