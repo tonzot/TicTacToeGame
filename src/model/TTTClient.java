@@ -64,14 +64,6 @@ public class TTTClient extends Client {
     }
 
     /**
-     * setMyTurn(...) ist eine verändernde Methode.
-     * @param myTurn ist der neue Wert den die Variable myTurn annehmen soll.
-     */
-    public void setMyTurn(boolean myTurn) {
-        this.myTurn = myTurn;
-    }
-
-    /**
      * getSign() ist eine sondierende Methode.
      * @return sign. Der Wert von der Variable sign wird zurückgegeben.
      */
