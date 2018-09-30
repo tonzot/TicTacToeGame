@@ -22,6 +22,9 @@ public class TTTServer extends Server {
             playerIps[currentPlayerAmount] = pClientIP;
             playerPorts[currentPlayerAmount] = pClientPort;
             currentPlayerAmount++;
+            if (currentPlayerAmount == 2){
+                send(playerIps[0], playerPorts[0],"START");
+            }
         } else{
             send(pClientIP, pClientPort, "TOOMUCH;Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
             playerIps[currentPlayerAmount] = pClientIP;
@@ -44,9 +47,20 @@ public class TTTServer extends Server {
                 send(playerIps[0], playerPorts[0], "OPPONENTPICK;" + x + ";" + y);
             }
 
-
-        } else if(nachrichtenTeil[0].equals("LEAVE")){
+        } else if(nachrichtenTeil[0].equals("LEAVE")) {
             processClosingConnection(pClientIP, pClientPort);
+
+        }else if(nachrichtenTeil[0].equals("WIN")) {
+            if (playerIps[0].equals(pClientIP)) {
+                send(playerIps[0], playerPorts[0], "WIN;Glückwunsch, du hast gewonnen!");
+                send(playerIps[1], playerPorts[1], "LOSE;Du hast leider verloren...");
+            } else {
+                send(playerIps[1], playerPorts[1], "WIN;Glückwunsch, du hast gewonnen!");
+                send(playerIps[0], playerPorts[0], "LOSE;Du hast leider verloren...");
+            }
+        }else if(nachrichtenTeil[0].equals("DRAW")){
+            send(playerIps[0], playerPorts[0], "DRAW;Unentschieden");
+            send(playerIps[1], playerPorts[1], "DRAW;Unentschieden");
 
         }else{
             send(pClientIP, pClientPort, "FALSECOMMAND;Geben Sie bitte einen richtigen Befehl ein.");
