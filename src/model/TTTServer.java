@@ -59,8 +59,10 @@ public class TTTServer extends Server {
             int y = Integer.parseInt(nachrichtenTeil[2]);
             if (playerOnesTurn) {
                 send(playerIps[1], playerPorts[1], "OPPONENTPICK;" + x + ";" + y);
+                playerOnesTurn = false;
             }else{
                 send(playerIps[0], playerPorts[0], "OPPONENTPICK;" + x + ";" + y);
+                playerOnesTurn = true;
             }
 
         } else if(nachrichtenTeil[0].equals("LEAVE")) {

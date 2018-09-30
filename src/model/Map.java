@@ -43,7 +43,6 @@ public class Map extends GraphicalObject {
                     if (boxes[i][j].contains(e.getPoint())) {
                         if(tiles[i][j] == 0){
                             tiles[i][j] = client.getSign();
-                            System.out.println(client.getSign());
                             client.sendPick(i,j);
                         }
                     }
@@ -93,10 +92,6 @@ public class Map extends GraphicalObject {
     public void pickBox(int x, int y, int sign){
         tiles[x][y] = sign;
     }
-
-    //0 = nicht over
-    //1 = gewonnen
-    //2 = unentschieden
 
     /**
      * checkOver() überprüft, ob das Spiel vorbei ist
