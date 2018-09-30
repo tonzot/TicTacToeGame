@@ -12,7 +12,7 @@ public class TTTServer extends Server {
     private int[] playerPorts = new int[2];
 
     /**
-     * TTTServer(...)
+     * TTTServer(...) erstellt den Server
      * @param pPort ist der Port an dem der Server die Daten Empfängt.
      */
     public TTTServer(int pPort) {
