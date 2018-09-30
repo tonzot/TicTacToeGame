@@ -11,10 +11,20 @@ public class TTTServer extends Server {
     private String[] playerIps = new String[2];
     private int[] playerPorts = new int[2];
 
+    /**
+     * TTTServer(...)
+     * @param pPort ist der Port an dem der Server die Daten Empfängt.
+     */
     public TTTServer(int pPort) {
         super(pPort);
     }
 
+
+    /**
+     * processNewConnection(...) verarbeitet eine neue Verbindung.
+     * @param pClientIP ist die Ip des Clients.
+     * @param pClientPort ist der Port an dem der Client die Daten empfängt.
+     */
     @Override
     public void processNewConnection(String pClientIP, int pClientPort) {
         if(currentPlayerAmount < maxPlayerAmount) {
@@ -32,9 +42,15 @@ public class TTTServer extends Server {
         }
     }
 
+    /**
+     * processMessage(...) verarbeitet die empfangene Nachricht.
+     * @param pClientIP ist die Ip des Clients.
+     * @param pClientPort ist der Port an dem der Client die Daten empfängt.
+     * @param pMessage ist die Nachricht die der nun vom Server verarbeitet wird.
+     */
     @Override
     public void processMessage(String pClientIP, int pClientPort, String pMessage) {
-        String[] nachrichtenTeil = pMessage.split(":");
+        String[] nachrichtenTeil = pMessage.split(";");
         if(nachrichtenTeil[0].equals("CONNECT")){
             processNewConnection(pClientIP, pClientPort);
 
@@ -67,6 +83,11 @@ public class TTTServer extends Server {
         }
     }
 
+    /**
+     * processClosingConnection(...) beendet die Verbindung zu einem Client.
+     * @param pClientIP  ist die Ip des Clients.
+     * @param pClientPort ist der Port an dem der Client die Daten empfängt.
+     */
     @Override
     public void processClosingConnection(String pClientIP, int pClientPort) {
         send(pClientIP, pClientPort, "SIGNOUT;Hayde Ciao der Empfang geht weg.");
