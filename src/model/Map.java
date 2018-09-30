@@ -14,17 +14,29 @@ public class Map extends GraphicalObject {
     private int sign;
 
 
+    /**
+     * Map(...) erstellt das Spielfeld
+     * @param client ist eine Referent auf den Client
+     */
     public Map(TTTClient client){
         generateBoxes();
         this.client = client;
         this.sign = client.getSign();
     }
 
+    /**
+     * draw(...) zeichnet das Spielfeld
+     * @param drawTool ist eine Referenz auf das drawTool
+     */
     @Override
     public void draw(DrawTool drawTool){
         drawRectangles(drawTool);
     }
 
+    /**
+     * mouseReleased(...) lässt den Spieler, falls dieser dran ist, seinen Zug machen
+     * @param e ist eine Referenz auf das MouseEvent
+     */
     @Override
     public void mouseReleased(MouseEvent e){
         if(client.isMyTurn()) {
@@ -42,6 +54,10 @@ public class Map extends GraphicalObject {
         }
     }
 
+    /**
+     * generateBoxes() erstellt ein 2-Dimensionales Array für die Rechtecke und gibt diesen die richtigen Koordinaten
+     * außerdem wird ein 2-Dimensionales int Array erstellt, um sich den Inhalt der Rechtecke zu speichern
+     */
     public void generateBoxes(){
         boxes = new Rectangle2D.Double[3][3];
         for(int i = 0; i <= 2; i++){
@@ -52,6 +68,10 @@ public class Map extends GraphicalObject {
         tiles = new int[3][3];
     }
 
+    /**
+     * drawRectangles(...) zeichnet die Recktecke und ihren Inhalt
+     * @param drawTool ist eine Referenz auf das drawTool
+     */
     public void drawRectangles(DrawTool drawTool){
         for(int i = 0; i <= 2; i++){
             for(int j = 0; j <= 2; j++) {
@@ -66,6 +86,12 @@ public class Map extends GraphicalObject {
         }
     }
 
+    /**
+     * pickBox(...) belegt das übergebene Feld mit dem Übergebenem zeichen
+     * @param x ist die x-Koordinate des Feldes, jedoch nur von 0 bis 2
+     * @param y ist die y-Koordinate des Feldes, jedoch nur von 0 bis 2
+     * @param sign ist das Zeichen das eingesetzt werden soll, 0 für nichts, 1 für Kreuz und 2 für Kreis
+     */
     public void pickBox(int x, int y, int sign){
         tiles[x][y] = sign;
     }
@@ -73,6 +99,14 @@ public class Map extends GraphicalObject {
     //0 = nicht over
     //1 = gewonnen
     //2 = unentschieden
+
+    /**
+     * checkOver() überprüft, ob das Spiel vorbei ist
+     * @return gibt 0 bis 2 zurück
+     * bei 0 ist das Spiel nicht vorbei
+     * bei 1 ist das Spiel gewonnen
+     * bei 2 ist das Spiel unentschieden
+     */
     public int checkOver(){
         for(int i = 0; i <= 2; i++){
             if(tiles[i][0] == sign && tiles[i][1] == sign && tiles[i][2] == sign){
