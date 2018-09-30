@@ -32,12 +32,24 @@ public class TTTClient extends Client {
     public void processMessage(String pMessage) {
         String[] splits = pMessage.split(";");
 
-        if(splits[0].equals("OPPONENTPICK")){
-            map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),2);
-            myTurn = true;
-        }else if(splits[0].equals("START")){
-            myTurn = true;
+        switch(splits[0]){
+            case "OPPONENTPICK":
+                map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),2);
+                myTurn = true;
+                break;
+            case "START":
+                myTurn = true;
+                break;
+            case "WELCOME":
+            case "TOOMUCH":
+            case "WIN":
+            case "Lose":
+            case "DRAW":
+            case "SIGNOUT":
+                System.out.println(splits[1]);
+                break;
         }
+
     }
 
     /**
