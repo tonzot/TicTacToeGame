@@ -11,7 +11,6 @@ public class Map extends GraphicalObject {
     private int[][] tiles;
     private Rectangle2D.Double[][] boxes;
     private TTTClient client;
-    private int sign;
 
 
     /**
@@ -21,7 +20,6 @@ public class Map extends GraphicalObject {
     public Map(TTTClient client){
         generateBoxes();
         this.client = client;
-        this.sign = client.getSign();
     }
 
     /**
@@ -40,12 +38,12 @@ public class Map extends GraphicalObject {
     @Override
     public void mouseReleased(MouseEvent e){
         if(client.isMyTurn()) {
-            System.out.println(1);
             for (int i = 0; i <= 2; i++) {
                 for (int j = 0; j <= 2; j++) {
                     if (boxes[i][j].contains(e.getPoint())) {
                         if(tiles[i][j] == 0){
                             tiles[i][j] = client.getSign();
+                            System.out.println(client.getSign());
                             client.sendPick(i,j);
                         }
                     }
@@ -109,15 +107,15 @@ public class Map extends GraphicalObject {
      */
     public int checkOver(){
         for(int i = 0; i <= 2; i++){
-            if(tiles[i][0] == sign && tiles[i][1] == sign && tiles[i][2] == sign){
+            if(tiles[i][0] == client.getSign() && tiles[i][1] == client.getSign() && tiles[i][2] == client.getSign()){
                 return 1;
-            }else if(tiles[0][1] == sign && tiles[1][i] == sign && tiles[2][i] == sign){
+            }else if(tiles[0][i] == client.getSign() && tiles[1][i] == client.getSign() && tiles[2][i] == client.getSign()){
                 return 1;
             }
         }
-        if(tiles[0][0] == sign && tiles[1][1] == sign && tiles[2][2] == sign){
+        if(tiles[0][0] == client.getSign() && tiles[1][1] == client.getSign() && tiles[2][2] == client.getSign()){
             return 1;
-        }else if(tiles[0][2] == sign && tiles[1][1] == sign && tiles[2][0] == sign){
+        }else if(tiles[0][2] == client.getSign() && tiles[1][1] == client.getSign() && tiles[2][0] == client.getSign()){
             return 1;
         }else{
             int a = 0;

@@ -14,12 +14,13 @@ public class Config {
     public final static int WINDOW_HEIGHT = 800;
 
     // Schaltet die Infomeldungen des Frameworks an oder aus
-    public final static boolean INFO_MESSAGES = true;
+    public final static boolean INFO_MESSAGES = false;
 
     // Frameworkversion
     public final static String VERSION = "AOS-KNB-Graphical-Java-Framework - 1.7 - 08.12.2017";
 
-    public final static  String ServerIp = "0";
-    public final static  int ServerPort = 187;
+    public final static String ServerIp = "LOCALHOST";
+    //public final static  String ServerIp = "192.168.0.243";
+    public final static  int ServerPort = 186;
 
 }

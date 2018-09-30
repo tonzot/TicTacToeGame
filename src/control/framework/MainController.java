@@ -51,11 +51,15 @@ public class MainController {
         x = x - Config.WINDOW_WIDTH / 2;
         y = y - Config.WINDOW_HEIGHT / 2;
         // Erzeuge ein neues Fenster zum Zeichnen
-        DrawFrame drawFrame = new DrawFrame(Config.WINDOW_TITLE, x, y, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+        DrawFrame drawFrame = new DrawFrame(Config.WINDOW_TITLE, 0, 0, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
         drawFrame.setResizable(false);
         // Übergibt den weiteren Programmfluss an das neue Objekt der Klasse UIController
         if ( Config.INFO_MESSAGES) System.out.println("  > MainController: Erzeuge UIController und übergebe Drawframe-Objekt-Referenz.");
         new UIController(drawFrame);
+
+        DrawFrame drawFrame2 = new DrawFrame(Config.WINDOW_TITLE, 600, 100, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
+        drawFrame2.setResizable(false);
+        new UIController(drawFrame2);
     }
 
 }

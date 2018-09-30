@@ -7,7 +7,7 @@ public class TTTClient extends Client {
 
     private boolean myTurn;
     private Map map;
-    private int sign;
+    private int sign, opponentSign;
 
     /**
      * TTTClient(...) sendet dem Server eine Verbindungsanfrage und verbindet ihn dann.
@@ -20,8 +20,8 @@ public class TTTClient extends Client {
         myTurn = false;
         map = new Map(this);
         uiController.drawObject(map);
-        send("CONNECT");
-        sign = 1;
+        sign = 2;
+        opponentSign = 1;
     }
 
     /**
@@ -34,16 +34,19 @@ public class TTTClient extends Client {
 
         switch(splits[0]){
             case "OPPONENTPICK":
-                map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),2);
+                map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),opponentSign);
                 myTurn = true;
                 break;
             case "START":
                 myTurn = true;
+                System.out.println("start");
+                sign = 1;
+                opponentSign = 2;
                 break;
             case "WELCOME":
             case "TOOMUCH":
             case "WIN":
-            case "Lose":
+            case "LOSE":
             case "DRAW":
             case "SIGNOUT":
                 System.out.println(splits[1]);
