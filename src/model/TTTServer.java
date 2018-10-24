@@ -74,14 +74,20 @@ public class TTTServer extends Server {
                     send(playerIps[0], playerPorts[0], "WIN");
                     send(playerIps[1], playerPorts[1], "LOSE");
                 } else {
-                    send(playerIps[1], playerPorts[1], "WIN;Glückwunsch, du hast gewonnen!");
-                    send(playerIps[0], playerPorts[0], "LOSE;Du hast leider verloren...");
+                    send(playerIps[1], playerPorts[1], "WIN");
+                    send(playerIps[0], playerPorts[0], "LOSE");
                 }
                 break;
             case "DRAW":
                 send(playerIps[0], playerPorts[0], "DRAW");
                 send(playerIps[1], playerPorts[1], "DRAW");
                 break;
+            case "CHAT":
+                if (playerIps[0].equals(pClientIP) && playerPorts[0] == pClientPort) {
+                    send(playerIps[1], playerPorts[1], "CHAT;"+nachrichtenTeil[1]);
+                } else {
+                    send(playerIps[0], playerPorts[0], "CHAT;"+nachrichtenTeil[1]);
+                }
             default:
                 send(pClientIP, pClientPort, "FALSECOMMAND;Geben Sie bitte einen richtigen Befehl ein.");
                 break;
