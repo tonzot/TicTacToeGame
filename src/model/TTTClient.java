@@ -44,12 +44,22 @@ public class TTTClient extends Client {
                 opponentSign = 2;
                 break;
             case "WELCOME":
+                System.out.println("Willkommen Bratan.");
+                break;
             case "TOOMUCH":
+                System.out.println("Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
+                break;
             case "WIN":
+                System.out.println("Glückwunsch, du hast gewonnen!");
+                break;
             case "LOSE":
+                System.out.println("Du hast leider verloren...");
+                break;
             case "DRAW":
+                System.out.println("Unentschieden");
+                break;
             case "SIGNOUT":
-                System.out.println(splits[1]);
+                System.out.println("Hayde Ciao der Empfang geht weg.");
                 break;
         }
 

@@ -28,7 +28,7 @@ public class TTTServer extends Server {
     @Override
     public void processNewConnection(String pClientIP, int pClientPort) {
         if(currentPlayerAmount < maxPlayerAmount) {
-            send(pClientIP, pClientPort, "WELCOME;Willkommen Bratan.");
+            send(pClientIP, pClientPort, "WELCOME");
             playerIps[currentPlayerAmount] = pClientIP;
             playerPorts[currentPlayerAmount] = pClientPort;
             currentPlayerAmount++;
@@ -36,7 +36,7 @@ public class TTTServer extends Server {
                 send(playerIps[0], playerPorts[0],"START");
             }
         } else{
-            send(pClientIP, pClientPort, "TOOMUCH;Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
+            send(pClientIP, pClientPort, "TOOMUCH");
             playerIps[currentPlayerAmount] = pClientIP;
             currentPlayerAmount++;
         }
@@ -71,16 +71,16 @@ public class TTTServer extends Server {
                 break;
             case "WIN":
                 if (playerIps[0].equals(pClientIP)) {
-                    send(playerIps[0], playerPorts[0], "WIN;Glückwunsch, du hast gewonnen!");
-                    send(playerIps[1], playerPorts[1], "LOSE;Du hast leider verloren...");
+                    send(playerIps[0], playerPorts[0], "WIN");
+                    send(playerIps[1], playerPorts[1], "LOSE");
                 } else {
                     send(playerIps[1], playerPorts[1], "WIN;Glückwunsch, du hast gewonnen!");
                     send(playerIps[0], playerPorts[0], "LOSE;Du hast leider verloren...");
                 }
                 break;
             case "DRAW":
-                send(playerIps[0], playerPorts[0], "DRAW;Unentschieden");
-                send(playerIps[1], playerPorts[1], "DRAW;Unentschieden");
+                send(playerIps[0], playerPorts[0], "DRAW");
+                send(playerIps[1], playerPorts[1], "DRAW");
                 break;
             default:
                 send(pClientIP, pClientPort, "FALSECOMMAND;Geben Sie bitte einen richtigen Befehl ein.");
@@ -95,7 +95,7 @@ public class TTTServer extends Server {
      */
     @Override
     public void processClosingConnection(String pClientIP, int pClientPort) {
-        send(pClientIP, pClientPort, "SIGNOUT;Hayde Ciao der Empfang geht weg.");
+        send(pClientIP, pClientPort, "SIGNOUT");
         closeConnection(pClientIP, pClientPort);
     }
 }
