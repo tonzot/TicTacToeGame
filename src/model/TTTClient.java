@@ -99,6 +99,8 @@ public class TTTClient extends Client {
         myTurn = false;
     }
 
+    //////
+
     public int[][] getTiles() {
         return tiles;
     }
