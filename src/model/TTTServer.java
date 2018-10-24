@@ -10,6 +10,8 @@ public class TTTServer extends Server {
     private int currentPlayerAmount = 0;
     private String[] playerIps = new String[2];
     private int[] playerPorts = new int[2];
+    private int[][] tiles;
+    private String tilesString;
 
     /**
      * TTTServer(...)
@@ -17,6 +19,7 @@ public class TTTServer extends Server {
      */
     public TTTServer(int pPort) {
         super(pPort);
+        tiles = new int[3][3];
     }
 
 
@@ -52,38 +55,46 @@ public class TTTServer extends Server {
     public void processMessage(String pClientIP, int pClientPort, String pMessage) {
         String[] nachrichtenTeil = pMessage.split(";");
         switch(nachrichtenTeil[0]){
-            case "CONNECT":
-                processNewConnection(pClientIP, pClientPort);
-                break;
             case "PICK":
                 int x = Integer.parseInt(nachrichtenTeil[1]);
                 int y = Integer.parseInt(nachrichtenTeil[2]);
-                if (playerOnesTurn) {
-                    send(playerIps[1], playerPorts[1], "OPPONENTPICK;" + x + ";" + y);
+                if(playerOnesTurn){
+                    tiles[x][y] = 1;
+                }else{
+                    tiles[x][y] = 2;
+                }
+                tilesString = buildTilesString();
+                if(playerOnesTurn){
+                    send(playerIps[1], playerPorts[1], "OPPONENTPICK;" + tilesString);
+                }else{
+                    send(playerIps[0], playerPorts[0], "OPPONENTPICK;" + tilesString);
+                }
+                int i = checkOver();
+                switch (i){
+                    case 1:
+                        send(playerIps[0], playerPorts[0], "WIN");
+                        send(playerIps[1], playerPorts[1], "LOSE");
+                        break;
+                    case 2:
+                        send(playerIps[1], playerPorts[1], "WIN");
+                        send(playerIps[0], playerPorts[0], "LOSE");
+                        break;
+                    case 3:
+                        send(playerIps[0], playerPorts[0], "DRAW");
+                        send(playerIps[1], playerPorts[1], "DRAW");
+                        break;
+                }
+                if(playerOnesTurn){
                     playerOnesTurn = false;
                 }else{
-                    send(playerIps[0], playerPorts[0], "OPPONENTPICK;" + x + ";" + y);
                     playerOnesTurn = true;
                 }
                 break;
             case "LEAVE":
                 processClosingConnection(pClientIP, pClientPort);
                 break;
-            case "WIN":
-                if (playerIps[0].equals(pClientIP)) {
-                    send(playerIps[0], playerPorts[0], "WIN");
-                    send(playerIps[1], playerPorts[1], "LOSE");
-                } else {
-                    send(playerIps[1], playerPorts[1], "WIN;Glückwunsch, du hast gewonnen!");
-                    send(playerIps[0], playerPorts[0], "LOSE;Du hast leider verloren...");
-                }
-                break;
-            case "DRAW":
-                send(playerIps[0], playerPorts[0], "DRAW");
-                send(playerIps[1], playerPorts[1], "DRAW");
-                break;
             default:
-                send(pClientIP, pClientPort, "FALSECOMMAND;Geben Sie bitte einen richtigen Befehl ein.");
+                send(pClientIP, pClientPort, "FALSECOMMAND");
                 break;
         }
     }
@@ -97,5 +108,52 @@ public class TTTServer extends Server {
     public void processClosingConnection(String pClientIP, int pClientPort) {
         send(pClientIP, pClientPort, "SIGNOUT");
         closeConnection(pClientIP, pClientPort);
+    }
+
+    public String buildTilesString(){
+        String s = "";
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                s = s + tiles[i][j] + ";";
+            }
+        }
+        return s;
+    }
+
+
+
+    /**
+     * checkOver() überprüft, ob das Spiel vorbei ist
+     * @return gibt 0 bis 2 zurück
+     * bei 0 ist das Spiel nicht vorbei
+     * bei 1 hat Spieler 1 das Spiel gewonnen
+     * bei 2 hat Spieler 2 das Spiel gewonnen
+     * bei 3 ist das Spiel unentschieden
+     */
+    public int checkOver(){
+        int a = 0;
+        for(int i = 0; i <= 2; i++){
+            for(int j = 0; j <= 2; j++) {
+                if(tiles[i][j] > 0){
+                        a++;
+                }
+            }
+        }
+        if(a == 9){
+            return 2;
+        }
+        for(int i =0; i < 3; i++){
+            if(tiles[i][0] == tiles[i][1] && tiles[i][0] == tiles[i][2]){
+                return tiles[i][0];
+            }else if(tiles[0][i] == tiles[1][i] && tiles[0][i] == tiles[2][i]){
+                return tiles[i][0];
+            }
+        }
+        if(tiles[0][0] == tiles[1][1] && tiles[0][0] == tiles[2][2]){
+            return tiles[0][0];
+        }else if(tiles[2][0] == tiles[1][1] && tiles[2][0] == tiles[0][2]){
+            return tiles[0][0];
+        }
+        return 0;
     }
 }
