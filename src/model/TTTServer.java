@@ -74,14 +74,16 @@ public class TTTServer extends Server {
                     case 1:
                         send(playerIps[0], playerPorts[0], "WIN");
                         send(playerIps[1], playerPorts[1], "LOSE");
+                        close();
                         break;
                     case 2:
                         send(playerIps[1], playerPorts[1], "WIN");
                         send(playerIps[0], playerPorts[0], "LOSE");
+                        close();
                         break;
                     case 3:
-                        send(playerIps[0], playerPorts[0], "DRAW");
-                        send(playerIps[1], playerPorts[1], "DRAW");
+                        sendToAll("DRAW");
+                        close();
                         break;
                 }
                 if(playerOnesTurn){
@@ -107,7 +109,6 @@ public class TTTServer extends Server {
     @Override
     public void processClosingConnection(String pClientIP, int pClientPort) {
         send(pClientIP, pClientPort, "SIGNOUT");
-        closeConnection(pClientIP, pClientPort);
     }
 
     public String buildTilesString(){
@@ -140,13 +141,13 @@ public class TTTServer extends Server {
             }
         }
         if(a == 9){
-            return 2;
+            return 3;
         }
         for(int i =0; i < 3; i++){
             if(tiles[i][0] == tiles[i][1] && tiles[i][0] == tiles[i][2]){
                 return tiles[i][0];
             }else if(tiles[0][i] == tiles[1][i] && tiles[0][i] == tiles[2][i]){
-                return tiles[i][0];
+                return tiles[0][i];
             }
         }
         if(tiles[0][0] == tiles[1][1] && tiles[0][0] == tiles[2][2]){

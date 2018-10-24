@@ -4,6 +4,7 @@ import control.Config;
 import control.ProgramController;
 import view.framework.DrawFrame;
 import view.framework.DrawableObject;
+import view.framework.DrawingPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -126,6 +127,10 @@ public class UIController implements ActionListener {
         if ( dt == 0 ) dt = 1;
         drawFrame.getActiveDrawingPanel().updateDrawingPanel(dt);
         gameController.updateProgram((double)dt/1000);
+    }
+
+    public DrawingPanel getActiveDrawingPanel(){
+        return drawFrame.getActiveDrawingPanel();
     }
 
 }
