@@ -3,11 +3,18 @@ package model;
 import control.framework.UIController;
 import model.abitur.netz.Client;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class TTTClient extends Client {
 
     private boolean myTurn;
     private Map map;
     private int sign, opponentSign;
+
+    private JTextField jt;
+    private JLabel jl;
 
     /**
      * TTTClient(...) sendet dem Server eine Verbindungsanfrage und verbindet ihn dann.
@@ -22,6 +29,19 @@ public class TTTClient extends Client {
         uiController.drawObject(map);
         sign = 2;
         opponentSign = 1;
+        //Chat mit JTextfield
+        jt = new JTextField(30);
+        uiController.getActiveDrawingPanel().add(jt);
+        jl = new JLabel();
+        uiController.getActiveDrawingPanel().add(jl);
+        jt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String input = jt.getText();
+                send("CHAT;"+input);
+                jl.setText("YOU: "+input);
+            }
+        });
     }
 
     /**
@@ -61,6 +81,8 @@ public class TTTClient extends Client {
             case "SIGNOUT":
                 System.out.println("Hayde Ciao der Empfang geht weg.");
                 break;
+            case "CHAT":
+                jl.setText("OPPONENT: "+splits[1]);
         }
 
     }
