@@ -4,6 +4,7 @@ import control.framework.UIController;
 import model.abitur.netz.Client;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,8 +15,9 @@ public class TTTClient extends Client {
     private int sign, opponentSign;
     private int[][] tiles;
 
-    private JLabel jl;
     private JTextField jt;
+    private JTextArea textArea;
+    private JScrollPane sp;
 
     /**
      * TTTClient(...) sendet dem Server eine Verbindungsanfrage und verbindet ihn dann.
@@ -33,17 +35,22 @@ public class TTTClient extends Client {
         tiles = new int[3][3];
 
         //Chat mit JTextfield
-        jt = new JTextField(30);
-        jl =  new JLabel();
+        jt = new JTextField(41);
+        textArea = new JTextArea(6,40);
+        sp = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
         uiController.getActiveDrawingPanel().add(jt);
-        uiController.getActiveDrawingPanel().add(jl);
+        uiController.getActiveDrawingPanel().add(sp);
 
         jt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String input = jt.getText();
                 send("CHAT;"+input);
-                jl.setText("YOU: "+input);
+                textArea.append("YOU: "+input+"\n");
             }
         });
     }
@@ -92,7 +99,7 @@ public class TTTClient extends Client {
                 System.out.println("Hayde Ciao der Empfang geht weg.");
                 break;
             case "CHAT":
-                jl.setText("OPPONENT: "+ splits[1]);
+                textArea.append("OPPONENT: "+ splits[1] + "\n");
         }
 
     }

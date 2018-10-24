@@ -58,7 +58,7 @@ public class Map extends GraphicalObject {
         boxes = new Rectangle2D.Double[3][3];
         for(int i = 0; i <= 2; i++){
             for(int j = 0; j <= 2; j++){
-                boxes[i][j] = new Rectangle2D.Double(90+i*200,80+j*200,200, 200);
+                boxes[i][j] = new Rectangle2D.Double(90+i*200,145+j*200,200, 200);
             }
         }
     }
