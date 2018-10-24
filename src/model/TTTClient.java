@@ -3,11 +3,21 @@ package model;
 import control.framework.UIController;
 import model.abitur.netz.Client;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class TTTClient extends Client {
 
     private boolean myTurn;
     private Map map;
     private int sign, opponentSign;
+    private int[][] tiles;
+
+    private JTextField jt;
+    private JTextArea textArea;
+    private JScrollPane sp;
 
     /**
      * TTTClient(...) sendet dem Server eine Verbindungsanfrage und verbindet ihn dann.
@@ -22,6 +32,27 @@ public class TTTClient extends Client {
         uiController.drawObject(map);
         sign = 2;
         opponentSign = 1;
+        tiles = new int[3][3];
+
+        //Chat mit JTextfield
+        jt = new JTextField(41);
+        textArea = new JTextArea(6,40);
+        sp = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
+        uiController.getActiveDrawingPanel().add(jt);
+        uiController.getActiveDrawingPanel().add(sp);
+
+        jt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String input = jt.getText();
+                send("CHAT;"+input);
+                textArea.append("YOU: "+input+"\n");
+            }
+        });
     }
 
     /**
@@ -34,7 +65,13 @@ public class TTTClient extends Client {
 
         switch(splits[0]){
             case "OPPONENTPICK":
-                map.pickBox(Integer.parseInt(splits[1]),Integer.parseInt(splits[2]),opponentSign);
+                int h = 1;
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < 3; j++){
+                        tiles[i][j] = Integer.parseInt(splits[h]);
+                        h++;
+                    }
+                }
                 myTurn = true;
                 break;
             case "START":
@@ -44,13 +81,25 @@ public class TTTClient extends Client {
                 opponentSign = 2;
                 break;
             case "WELCOME":
-            case "TOOMUCH":
-            case "WIN":
-            case "LOSE":
-            case "DRAW":
-            case "SIGNOUT":
-                System.out.println(splits[1]);
+                System.out.println("Willkommen Bratan.");
                 break;
+            case "TOOMUCH":
+                System.out.println("Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
+                break;
+            case "WIN":
+                System.out.println("Glückwunsch, du hast gewonnen!");
+                break;
+            case "LOSE":
+                System.out.println("Du hast leider verloren...");
+                break;
+            case "DRAW":
+                System.out.println("Unentschieden");
+                break;
+            case "SIGNOUT":
+                System.out.println("Hayde Ciao der Empfang geht weg.");
+                break;
+            case "CHAT":
+                textArea.append("OPPONENT: "+ splits[1] + "\n");
         }
 
     }
@@ -61,14 +110,6 @@ public class TTTClient extends Client {
      */
     public boolean isMyTurn() {
         return myTurn;
-    }
-
-    /**
-     * setMyTurn(...) ist eine verändernde Methode.
-     * @param myTurn ist der neue Wert den die Variable myTurn annehmen soll.
-     */
-    public void setMyTurn(boolean myTurn) {
-        this.myTurn = myTurn;
     }
 
     /**
@@ -87,11 +128,15 @@ public class TTTClient extends Client {
     public void sendPick(int x, int y){
         send("PICK;" + x + ";" + y);
         myTurn = false;
-        int i = map.checkOver();
-        if(i == 1){
-            send("WIN");
-        }else if(i == 2){
-            send("DRAW");
-        }
+    }
+
+    //////
+
+    public int[][] getTiles() {
+        return tiles;
+    }
+
+    public void setTile(int i, int j, int a) {
+        tiles[i][j] = a;
     }
 }
