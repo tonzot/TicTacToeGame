@@ -1,6 +1,5 @@
 package control;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 
 import java.util.Base64;
@@ -56,23 +55,10 @@ public class RSA {
         this.d = d;
         this.e = e;
 
-        /*byte[] encoded = Base64.getEncoder().encode("hi".getBytes(StandardCharsets.UTF_8));
-        String encodedString = encoded.toString();
-        BigInteger encryptedMessage = encrypt(encoded);
-        System.out.println("hi : " + encodedString);
-        System.out.println(encryptedMessage);
-
-
+        BigInteger encryptedMessage = encrypt(encodeString("HI"));
+        System.out.println(decodeString(new String(encryptedMessage.toByteArray())));
         BigInteger decryptedMessage = decrypt(encryptedMessage);
-        byte[] decoded = null;
-        try {
-            decoded = Base64.getDecoder().decode(decryptedMessage.toByteArray());
-        } catch (IllegalArgumentException ee){
-            ee.printStackTrace();
-        }
-        String decodedString = decoded.toString();
-        System.out.println("decoded and decrypted: " + decodedString);*/
-        System.out.println(encrypt("hi"));
+        System.out.println(encryptedMessage + " "+ decryptedMessage);
     }
 
     private BigInteger zahlOhneTeilerTest(BigInteger r, BigInteger e){
@@ -104,7 +90,7 @@ public class RSA {
 
     }
 
-    public BigInteger encrypt(String msg){
+    public BigInteger encrypt(byte[] msg){
         BigInteger m = new BigInteger(msg);
         BigInteger c = m.pow(e.intValue()).mod(n);
         System.out.println(c);
@@ -117,15 +103,12 @@ public class RSA {
         return m;
     }
 
-    private String encodeString(String text) {
-
-        return Base64.getEncoder().encodeToString(text.getBytes());
-
-
+    private byte[] encodeString(String text){
+        return Base64.getEncoder().encode(text.getBytes());
     }
 
-    private byte[] decodeString(byte[] text){
-        return Base64.getDecoder().decode(text);
+    private byte[] decodeString(String text){
+        return Base64.getDecoder().decode(text.getBytes());
     }
 
 
