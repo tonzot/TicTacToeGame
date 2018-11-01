@@ -13,6 +13,9 @@ public class TTTServer extends Server {
     private int[][] tiles;
     private String tilesString;
 
+    //Referenzen
+    private OldRSA rsa;
+
     /**
      * TTTServer(...) erstellt den Server
      * @param pPort ist der Port an dem der Server die Daten Empfängt.
@@ -20,6 +23,7 @@ public class TTTServer extends Server {
     public TTTServer(int pPort) {
         super(pPort);
         tiles = new int[3][3];
+        rsa = new OldRSA();
     }
 
 

@@ -4,20 +4,25 @@ import control.framework.UIController;
 import model.abitur.netz.Client;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TTTClient extends Client {
 
     private boolean myTurn;
-    private Map map;
     private int sign, opponentSign;
     private int[][] tiles;
 
+    //Referenzen
+    private Map map;
     private JTextField jt;
     private JTextArea textArea;
     private JScrollPane sp;
+
+    //OldRSA-Verfahren: Referenzen
+    private OldRSA rsa;
+    private String privateKey;
+    private String publicKey;
 
     /**
      * TTTClient(...) sendet dem Server eine Verbindungsanfrage und verbindet ihn dann.
@@ -27,6 +32,12 @@ public class TTTClient extends Client {
      */
     public TTTClient(String pServerIP, int pServerPort, UIController uiController) {
         super(pServerIP, pServerPort);
+
+        //OldRSA einstellen.
+        rsa = new OldRSA();
+        rsa.gen();
+        send("KEYS;" + rsa.key.getPublic() + ";" + rsa.key.getPrivate());
+
         myTurn = false;
         map = new Map(this);
         uiController.drawObject(map);
@@ -49,7 +60,7 @@ public class TTTClient extends Client {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String input = jt.getText();
-                send("CHAT;"+input);
+                send("CHAT;"+ new String( rsa.encrypt(input, rsa.key.getPublic())) );
                 textArea.append("YOU: "+input+"\n");
             }
         });
@@ -99,7 +110,12 @@ public class TTTClient extends Client {
                 System.out.println("Hayde Ciao der Empfang geht weg.");
                 break;
             case "CHAT":
-                textArea.append("OPPONENT: "+ splits[1] + "\n");
+                String decrypted = rsa.decrypt(splits[1].getBytes(), rsa.key.getPrivate());
+                textArea.append("OPPONENT: "+ decrypted + "\n");
+            case "KEYS":
+                publicKey = splits[1];
+                privateKey = splits[2];
+
         }
 
     }
