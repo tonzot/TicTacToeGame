@@ -1,116 +1,109 @@
 package control;
 
 import java.math.BigInteger;
-
-import java.util.Base64;
 import java.util.Random;
 
 public class RSA {
+    private BigInteger m, c, n, e, d, phi, p, q;
 
-    private BigInteger p = null, q = null;
-
-    boolean found = false;
-
-    private BigInteger e, d, n;
-
+    /**
+     * Konstruktor der RSA Klasse
+     * Berechnet alle zuvor erstellten Werte, die für das RSA Verfahren notwendig sind
+     */
     public RSA(){
+        //p
+        p = BigInteger.probablePrime(1000, new Random());
 
+        //q
+        do {
+            q = BigInteger.probablePrime(1000, new Random());
+        }while(p.compareTo(q) == 0);
 
-        p = BigInteger.probablePrime(4, new Random());
-        q = BigInteger.probablePrime(4, new Random());
+        //n
+        n = p.multiply(q);
 
-        while(p.equals(q)){
-            p = BigInteger.probablePrime(4, new Random());
-            q = BigInteger.probablePrime(4, new Random());
+        //phi
+        phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+
+        //e
+        do{
+            e = BigInteger.probablePrime(5, new Random());
+        }while(e.gcd(phi).compareTo(BigInteger.ONE) != 0);
+
+        //d
+        int k = 1;
+        while(BigInteger.valueOf(k).multiply(phi).add(BigInteger.ONE).mod(e).compareTo(BigInteger.ZERO) != 0){
+            k++;
         }
-
-        //System.out.println(p + "," + q);
-        p = new BigInteger("" + 5);
-        q = new BigInteger("" + 11);
-
-        BigInteger n = p.multiply(q);
-
-        //Löschung
-
-        BigInteger r = (p.subtract(new BigInteger("" + 1))).multiply((q.subtract(new BigInteger("" + 1))));
-
-        //Löschung von p und q
-        p = q = null;
-
-        //System.out.println(p + ", " + q + "," + r);
-        BigInteger e = new BigInteger("" + -1);
-        for (int i = 1; e.equals(new BigInteger("" + -1)); i++){
-            e = zahlOhneTeilerTest(r, new BigInteger("" + i));
-        }
-
-        BigInteger d = new BigInteger("" + -1);
-        for(int i = 1; d.equals(new BigInteger("" + -1)); i++){
-            d = dBestimmen(r, e, new BigInteger("" + i));
-
-        }
-        //System.out.println(e);
-        //System.out.println(d);
-
-        this.n = n;
-        this.d = d;
-        this.e = e;
-
-        BigInteger encryptedMessage = encrypt(encodeString("HI"));
-        System.out.println(decodeString(new String(encryptedMessage.toByteArray())));
-        BigInteger decryptedMessage = decrypt(encryptedMessage);
-        System.out.println(encryptedMessage + " "+ decryptedMessage);
+        d = BigInteger.valueOf(k).multiply(phi).add(BigInteger.ONE).divide(e);
     }
 
-    private BigInteger zahlOhneTeilerTest(BigInteger r, BigInteger e){
+    /**
+     * Diese Methode verschlüsselt einen übergebenen Text mit dem RSA-Verfahren
+     * @param m Die zu verschlüsselnde Nachricht
+     * @param publicKey Das Schlüsselpaar, mit dem die Nachricht verschlüsselt werden soll
+     * @return Der verschlüsselte Text
+     */
+    public String encrypt(String m, String[] publicKey){
+        String c = "";
 
-        int i = 0;
-
-
-        for(BigInteger teiler = new BigInteger("" + 1); teiler.equals(r) || teiler.compareTo(r) == -1; teiler = teiler.add(new BigInteger("" + 1))) {
-
-
-            if(r.mod(e).equals(new BigInteger("" + 0))) {
-                i++;
-
+        char[] chars= m.toCharArray();
+        for(int i = 0; i < chars.length; i++){
+            String a = Integer.toBinaryString(((int)chars[i]));
+            while(a.length() < 8){
+                a = "0" + a;
             }
-
+            c = c + a;
         }
-        if (i == 0){
-            return e;
-        }
-        return new BigInteger("" + -1);
-    }
 
-    private BigInteger dBestimmen(BigInteger r, BigInteger e, BigInteger d){
+        c = new BigInteger(c).modPow(new BigInteger(publicKey[1]), new BigInteger(publicKey[0])).toString();
 
-        if(e.multiply(d).mod(r).equals(new BigInteger("" + 1))){
-            return d;
-        }
-        return new BigInteger("" + -1);
-
-    }
-
-    public BigInteger encrypt(byte[] msg){
-        BigInteger m = new BigInteger(msg);
-        BigInteger c = m.pow(e.intValue()).mod(n);
-        System.out.println(c);
         return c;
     }
 
-    public BigInteger decrypt(BigInteger c){
-        BigInteger m = c.pow(d.intValue()).mod(n);
-        System.out.println(m);
+    /**
+     * Entschlüsselt eine NAchricht mit dem eigenen privateKey,
+     * welche zuvor mit dem eigenen publicKey verschlüsselt wurde
+     * @param c Die zu entschlüsselnde Nachricht
+     * @return Die entschlüsselte Nachricht
+     */
+    public String decrypt(String c){
+        String m;
+
+        m = new BigInteger(c).modPow(d, n).toString();
+
+        while(m.length() % 8 != 0){
+            m = "0" + m;
+        }
+        char[] chars = m.toCharArray();
+        String[] strings = new String[m.length() / 8];
+        for(int i = 0; i < strings.length; i++){
+            strings[i] = "";
+            for(int j = 0; j < 8; j++){
+                strings[i] = strings[i] + chars[i*8 + j];
+            }
+        }
+
+        int[] ints = new int[strings.length];
+        chars = new char[ints.length];
+        for(int i = 0; i < ints.length; i++){
+            ints[i] = Integer.parseInt(strings[i], 2);
+            chars[i] = (char)ints[i];
+        }
+
+        m = String.valueOf(chars);
+
         return m;
     }
 
-    private byte[] encodeString(String text){
-        return Base64.getEncoder().encode(text.getBytes());
+    /**
+     * Sondierende Methode, die den eigenen publicKey zurückgibt
+     * @return Der eigene publicKey, in einem StringArray gespeichert
+     */
+    public String[] getPublicKey(){
+        String[] a = new String[2];
+        a[0] = n.toString();
+        a[1] = e.toString();
+        return a;
     }
-
-    private byte[] decodeString(String text){
-        return Base64.getDecoder().decode(text.getBytes());
-    }
-
-
-
 }

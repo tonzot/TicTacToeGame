@@ -41,6 +41,7 @@ public class TTTServer extends Server {
             currentPlayerAmount++;
             if (currentPlayerAmount == 2){
                 send(playerIps[0], playerPorts[0],"START");
+                sendToAll("SENDKEYS");
             }
         } else{
             send(pClientIP, pClientPort, "TOOMUCH");
@@ -104,6 +105,13 @@ public class TTTServer extends Server {
                     send(playerIps[1], playerPorts[1], "CHAT;"+nachrichtenTeil[1]);
                 } else {
                     send(playerIps[0], playerPorts[0], "CHAT;"+nachrichtenTeil[1]);
+                }
+                break;
+            case "KEYS":
+                if (playerIps[0].equals(pClientIP) && playerPorts[0] == pClientPort) {
+                    send(playerIps[1], playerPorts[1], "KEYS;"+nachrichtenTeil[1] + ";" + nachrichtenTeil[2]);
+                } else {
+                    send(playerIps[0], playerPorts[0], "KEYS;"+nachrichtenTeil[1] + ";" + nachrichtenTeil[2]);
                 }
             default:
                 send(pClientIP, pClientPort, "FALSECOMMAND");
