@@ -49,11 +49,12 @@ public class RSA {
 
         char[] chars= m.toCharArray();
         for(int i = 0; i < chars.length; i++){
-            String a = Integer.toBinaryString(((int)chars[i]));
-            while(a.length() < 8){
+            String a = Integer.toString((int)chars[i]);
+            while(a.length() < 3){
                 a = "0" + a;
             }
             c = c + a;
+
         }
 
         c = new BigInteger(c).modPow(new BigInteger(publicKey[1]), new BigInteger(publicKey[0])).toString();
@@ -72,22 +73,22 @@ public class RSA {
 
         m = new BigInteger(c).modPow(d, n).toString();
 
-        while(m.length() % 8 != 0){
+        while(m.length() % 3 != 0){
             m = "0" + m;
         }
         char[] chars = m.toCharArray();
-        String[] strings = new String[m.length() / 8];
+        String[] strings = new String[m.length() / 3];
         for(int i = 0; i < strings.length; i++){
             strings[i] = "";
-            for(int j = 0; j < 8; j++){
-                strings[i] = strings[i] + chars[i*8 + j];
+            for(int j = 0; j < 3; j++){
+                strings[i] = strings[i] + chars[i*3 + j];
             }
         }
 
         int[] ints = new int[strings.length];
-        chars = new char[ints.length];
-        for(int i = 0; i < ints.length; i++){
-            ints[i] = Integer.parseInt(strings[i], 2);
+        chars = new char[strings.length];
+        for(int i = 0; i < strings.length; i++){
+            ints[i] = Integer.parseInt(strings[i]);
             chars[i] = (char)ints[i];
         }
 
