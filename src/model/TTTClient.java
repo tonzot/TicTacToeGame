@@ -87,7 +87,7 @@ public class TTTClient extends Client {
                 opponentSign = 2;
                 break;
             case "WELCOME":
-                System.out.println("Willkommen Bratan.");
+                System.out.println("Willkommen.");
                 break;
             case "TOOMUCH":
                 System.out.println("Es tut uns leid, es wurde bereits ein Spiel gestartet. /n Schauen Sie später wieder vorbei.");
@@ -102,7 +102,7 @@ public class TTTClient extends Client {
                 System.out.println("Unentschieden");
                 break;
             case "SIGNOUT":
-                System.out.println("Hayde Ciao der Empfang geht weg.");
+                System.out.println("Ausgeloggt.");
                 break;
             case "CHAT":
                 textArea.append("OPPONENT: " + rsa.decrypt(splits[1]) + "\n");
